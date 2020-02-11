@@ -3,12 +3,13 @@
 
 #include <Arduino.h>
 
+
 class Serial_Parser
 {
   public:
     Serial_Parser(char delimiter, int range_M, int range_m);
     // int GetNumParams();
-    int* GetParams(int* nums);
+    void GetParams(int* nums, int* param_check);
 
 
   private:
