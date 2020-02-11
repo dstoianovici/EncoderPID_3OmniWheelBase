@@ -4,13 +4,13 @@
 
 //<<constructor>>
 Encoder_Buffer::Encoder_Buffer(int _slaveSelectEnc){
-  
+
  slaveSelectEnc = _slaveSelectEnc;
 
- 
+
   pinMode(slaveSelectEnc, OUTPUT);
   SPI.begin();
-   
+
 }
 
 Encoder_Buffer::~Encoder_Buffer(){};
@@ -35,7 +35,7 @@ void Encoder_Buffer::initEncoder() {
   digitalWrite(slaveSelectEnc, HIGH);      // Terminate SPI conversation
 
   clearEncoderCount();
-  
+
 }
 
 
@@ -44,25 +44,25 @@ void Encoder_Buffer::initEncoder() {
 // RETURNS: long
 // ****************************************************
 long Encoder_Buffer::readEncoder() {
-    
+
   return EncoderActualValue(slaveSelectEnc);
-  
-  
+
+
 }
 
 void Encoder_Buffer::clearEncoderCount() {
 
    _clearEncoderCount(slaveSelectEnc);
-   
+
 }
 
 void Encoder_Buffer::debugEncoder(){
-  
+
    Serial.print( encodercount[0]); Serial.print(" ");
    Serial.print( encodercount[1]); Serial.print(" ");
    Serial.print( encodercount[2]); Serial.print(" ");
    Serial.println( encodercount[3]);
-   
+
 }
 
 // ****************************************************
@@ -70,7 +70,7 @@ void Encoder_Buffer::debugEncoder(){
 // RETURNS: N/A
 // ****************************************************
 void Encoder_Buffer::_clearEncoderCount(int usedPin){
-  
+
    // Set encoder1's data register to 0
   digitalWrite(usedPin, LOW);     // Begin SPI conversation
   // Write to DTR
@@ -92,23 +92,25 @@ void Encoder_Buffer::_clearEncoderCount(int usedPin){
 
 
 long Encoder_Buffer::EncoderActualValue(int usedPin){
-   long count_value; 
+   long count_value;
   // Read encoder
     noInterrupts();           // disable all interrupts
-    
+
     digitalWrite(usedPin, LOW);     // Begin SPI conversation
     SPI.transfer(0x60); // Request count
     encodercount[0]  = SPI.transfer(0x00);   // Read highest order byte
     encodercount[1]  = SPI.transfer(0x00);
     encodercount[2]  = SPI.transfer(0x00);
     encodercount[3]  = SPI.transfer(0x00);  // Read lowest order byte
-
     digitalWrite(usedPin, HIGH);    // Terminate SPI conversation
-    
+
+    delay(50); //Added by Dan Stoianovici, attempt to reduce SPI speed
+
+
     count_value = (encodercount[0] << 8) + encodercount[1];
     count_value = (count_value << 8) + encodercount[2];
     count_value = (count_value << 8) + encodercount[3];
-    
+
    // encodercount[0]  = (count_value & 0xFF);
  //   encodercount[1]  = (count_value >>8 & 0xFF);
    // encodercount[2]  = (count_value >>16 & 0xFF);

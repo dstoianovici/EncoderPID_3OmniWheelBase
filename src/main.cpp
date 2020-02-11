@@ -73,10 +73,10 @@ Encoder_Buffer enc3(cs3);
 int setpoints[NUM_PARAMS] = {0,0,0}, setpoints_old[NUM_PARAMS] = {0,0,0};
 
 //PID Vars
-float kP[3] = {.5,.5,.5};
+float kP[3] = {.7,.7,.7};
 float kI[3] = {0,0,0};
 // float kI[4] = {0.2,.2,.2};
-float kD[3] = {0,0,0};
+float kD[3] = {1.25,1.25,1.25};
 
 float deadband = 7.0;
 
@@ -103,7 +103,7 @@ float average(float* arr, int len);
 
 void setup() {
   Serial.begin(BAUD_RATE);
-  SPI.begin();
+  //SPI.begin();
   enc1.initEncoder();
   enc2.initEncoder();
   enc3.initEncoder();
@@ -162,11 +162,11 @@ void loop() {
       }
 
 
-      int out1 = computePID(setpoints[0], (enc1.readEncoder()/4), 0, deadband);
+      int out1 = computePID(setpoints[0], (enc1.readEncoder()), 0, deadband);
       motor1.setSpeed(-out1);
-      int out2 = computePID(setpoints[1], (enc2.readEncoder()/4), 1, deadband);
+      int out2 = computePID(setpoints[1], (enc2.readEncoder()), 1, deadband);
       motor2.setSpeed(-out2);
-      int out3 = computePID(setpoints[2], (enc3.readEncoder()/4), 2, deadband);
+      int out3 = computePID(setpoints[2], (enc3.readEncoder()), 2, deadband);
       motor3.setSpeed(-out3);
 
       iter++;
@@ -179,27 +179,27 @@ void loop() {
       // motor3.setSpeed(-out3);
 
 
-      Serial.print("SP1: ");
-      Serial.println(setpoints[0]);
-      Serial.print("State1: ");
-      Serial.print(enc1.readEncoder());
-      Serial.println();
-      Serial.println();
-
-
-      Serial.print("SP2: ");
-      Serial.println(setpoints[1]);
-      Serial.print("State2: ");
-      Serial.print(enc2.readEncoder());
-      Serial.println();
-      Serial.println();
-
-      Serial.print("SP3: ");
-      Serial.println(setpoints[2]);
-      Serial.print("State3: ");
-      Serial.print(enc3.readEncoder());
-      Serial.println();
-      Serial.println();
+      // Serial.print("SP1: ");
+      // Serial.println(setpoints[0]);
+      // Serial.print("State1: ");
+      // Serial.print(enc1.readEncoder());
+      // Serial.println();
+      // Serial.println();
+      //
+      //
+      // Serial.print("SP2: ");
+      // Serial.println(setpoints[1]);
+      // Serial.print("State2: ");
+      // Serial.print(enc2.readEncoder());
+      // Serial.println();
+      // Serial.println();
+      //
+      // Serial.print("SP3: ");
+      // Serial.println(setpoints[2]);
+      // Serial.print("State3: ");
+      // Serial.print(enc3.readEncoder());
+      // Serial.println();
+      // Serial.println();
 
        delay(1000/PID_FREQ);
      }
